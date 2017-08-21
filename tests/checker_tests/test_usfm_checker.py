@@ -5,7 +5,9 @@ import unittest
 import tempfile
 import shutil
 import time
+from string import join
 from libraries.checkers.usfm_checker import UsfmChecker
+from libraries.door43_tools.linter_queue import LinterQueue
 from libraries.general_tools import file_utils
 from libraries.general_tools.file_utils import write_file, read_file, unzip
 from libraries.resource_container.ResourceContainer import RC
@@ -521,7 +523,26 @@ class TestUsfmChecker(unittest.TestCase):
         print("Checking time was " + str(elapsed_seconds) + " seconds")
         self.verify_results_counts(expected_errors, expected_warnings, checker)
 
-   #
+    def test_EnUlbSimulateParallel(self):
+        q = LinterQueue("test-linter_complete")
+
+        source_url = "http://my.path.org/repos/9967"
+        files_to_lint = ["file_{0}.usfm".format(l) for l in range(1, 11)]
+        q.clear_lint_jobs(source_url, files_to_lint, 2)
+        start = time.time()
+        for f in files_to_lint:
+            q.notify_lint_job_complete(source_url, f, True)
+
+        elapsed_seconds = int(time.time() - start)
+        print("Sending time was " + str(elapsed_seconds) + " seconds")
+
+        start = time.time()
+        success = q.wait_for_lint_jobs(source_url, files_to_lint)
+        elapsed_seconds = int(time.time() - start)
+        print("Waiting time was " + str(elapsed_seconds) + " seconds")
+
+        print("done success: {0}, recvd: {1}".format(success, join(q.recvd_payloads.keys(),"\n")))
+
     # helpers
     #
 
