@@ -531,6 +531,7 @@ class TestUsfmChecker(unittest.TestCase):
         q.clear_lint_jobs(source_url, files_to_lint, 2)
         start = time.time()
         for f in files_to_lint:
+            #simulate job completion
             q.notify_lint_job_complete(source_url, f, True)
 
         elapsed_seconds = int(time.time() - start)
@@ -542,6 +543,7 @@ class TestUsfmChecker(unittest.TestCase):
         print("Waiting time was " + str(elapsed_seconds) + " seconds")
 
         print("done success: {0}, recvd: {1}".format(success, join(q.recvd_payloads.keys(),"\n")))
+
 
     # helpers
     #
