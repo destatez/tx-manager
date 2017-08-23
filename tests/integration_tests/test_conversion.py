@@ -50,7 +50,7 @@ class TestConversions(TestCase):
     def setUp(self):
         branch = os.environ.get("TRAVIS_BRANCH", "develop")  # default is testing develop branch (dev)
 
-        destination = "dev-"  # default
+        destination = "test-"  # default
         if branch == "master":
             destination = ""  # no prefix for production
 

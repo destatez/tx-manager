@@ -458,6 +458,17 @@ class TestUsfmLinter(unittest.TestCase):
     #     print("Checking time was " + str(elapsed_seconds) + " seconds")
     #     self.verify_results_counts(expected_warnings, linter)
 
+    def test_ShortValid(self):
+        out_dir = self.unzip_resource('short_linter.zip')
+        expected_warnings = 0
+        start = time.time()
+        rc = RC(out_dir)
+        linter = UsfmLinter(source_dir=out_dir, rc=rc)
+        linter.run()
+        elapsed_seconds = int(time.time() - start)
+        print("Checking time was " + str(elapsed_seconds) + " seconds")
+        self.verify_results_counts(expected_warnings, linter)
+
     #
     # helpers
     #
